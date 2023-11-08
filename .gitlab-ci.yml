@@ -15,6 +15,17 @@ build website:
 
 
 test artifacts:
+  image: apline
   stage: test
   script:
-    - grep "Gatsby" ./public/index.html
+    - grep -q "Gatsby" ./public/index.html
+
+test website:
+  image: node
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - gatsby serve
+    - curl "http://localhost:9000" | grep -q "Gatsby"
