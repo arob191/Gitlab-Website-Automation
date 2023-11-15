@@ -43,5 +43,5 @@ test deployed website:
   stage: deployment test
   image: alpine
   script:
-    - apk add curl
-    - curl "https://arr191professional.surge.sh/" | tac | tac | grep -q "Gatsby"
+    - apk add --no-cache curl
+    - curl -s "https://arr191professional.surge.sh/" | grep -q "Welcome to Gatsby"
