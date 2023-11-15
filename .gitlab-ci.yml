@@ -41,6 +41,7 @@ deploy website to surge:
 
 test deployed website:
   stage: deployment test
+  image: alpine
   script:
-    - npm install
+    - RUN apk --no-cache add curl
     - curl "https://arr191professional.surge.sh/" | tac | tac | grep -q "Gatsby"
