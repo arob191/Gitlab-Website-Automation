@@ -4,6 +4,7 @@ stages:
   - build
   - test
   - deploy
+  - deployment test
 
 build website:
   stage: build
@@ -37,3 +38,9 @@ deploy website to surge:
   script:
     - npm install --global surge
     - surge --project ./public --domain ARR191Professional.surge.sh
+
+test deployed website:
+  stage: deployment test
+  script:
+    - npm install
+    - curl "https://arr191professional.surge.sh/" | tac | tac | grep -q "Gatsby"
