@@ -19,8 +19,8 @@ update cache:
   #   - if: $CI_PIPELINE_SOURCE == "schedule"
   #     when: always
   #   - when: never
-  cache:
-    policy: push
+  # cache:
+  #   policy: push
 
 build website:
   rules:
