@@ -11,22 +11,23 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - node_modules/
-  policy: pull-push
+  policy: pull
 
-# update cache:
-#   stage: cache
-#   # rules:
-#   #   - if: $CI_PIPELINE_SOURCE == "schedule"
-#   #     when: always
-#   #   - when: never
-#   cache:
-#     policy: push
+update cache:
+  stage: cache
+  script:
+    - npm install
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: push
+  only:
+    - schedules
 
 build website:
-  # rules:
-  #   - if: $CI_PIPELINE_SOURCE == "schedule"
-  #     when: never
   stage: build
+  cache: {}
   script:
     - echo $CI_COMMIT_SHORT_SHA
     - npm install
