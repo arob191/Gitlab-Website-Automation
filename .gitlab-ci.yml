@@ -14,11 +14,11 @@ cache:
     - node_modules/
 
 update cache:
+  stage: cache
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: always
     - when: never
-  stage: cache
   cache:
     policy: push
 
