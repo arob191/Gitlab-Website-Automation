@@ -13,14 +13,14 @@ cache:
     - node_modules/
   policy: pull-push
 
-update cache:
-  stage: cache
-  # rules:
-  #   - if: $CI_PIPELINE_SOURCE == "schedule"
-  #     when: always
-  #   - when: never
-  cache:
-    policy: push
+# update cache:
+#   stage: cache
+#   # rules:
+#   #   - if: $CI_PIPELINE_SOURCE == "schedule"
+#   #     when: always
+#   #   - when: never
+#   cache:
+#     policy: push
 
 build website:
   # rules:
