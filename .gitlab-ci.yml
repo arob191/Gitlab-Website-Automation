@@ -5,6 +5,7 @@ stages:
   - test
   - deploy
   - deployment test
+  - cache
 
 cache: 
   key: ${CI_COMMIT_REF_SLUG}
@@ -12,8 +13,17 @@ cache:
     - node_modules/
   policy: pull-push
 
+update cache:
+  stage: cache
+  cache:
+    policy: push
+  only:
+    - schedules
+
 build website:
   stage: build
+  except:
+    - schedules
   script:
     - echo $CI_COMMIT_SHORT_SHA
     - npm install
@@ -28,12 +38,16 @@ build website:
 test artifacts:
   image: alpine
   stage: test
+  except:
+    - schedules
   cache: {}
   script:
     - grep -q "Gatsby" ./public/index.html
 
 test website:
   stage: test
+  except:
+    - schedules
   cache:
     policy: pull
   script:
@@ -46,6 +60,8 @@ test website:
 
 deploy website to surge:
   stage: deploy
+  except:
+    - schedules
   cache:
     policy: pull
   script:
@@ -54,6 +70,8 @@ deploy website to surge:
 
 test deployed website:
   stage: deployment test
+  except:
+    - schedules
   image: alpine
   cache: {}
   script:
