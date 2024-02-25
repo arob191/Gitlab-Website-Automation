@@ -13,19 +13,19 @@ cache:
     - node_modules/
   policy: pull-push
 
-# update cache:
-#   stage: cache
-#   rules:
-#     - if: $CI_PIPELINE_SOURCE == "schedule"
-#       when: always
-#     - when: never
-#   cache:
-#     policy: push
+update cache:
+  stage: cache
+  # rules:
+  #   - if: $CI_PIPELINE_SOURCE == "schedule"
+  #     when: always
+  #   - when: never
+  cache:
+    policy: push
 
 build website:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
+  # rules:
+  #   - if: $CI_PIPELINE_SOURCE == "schedule"
+  #     when: never
   stage: build
   script:
     - echo $CI_COMMIT_SHORT_SHA
@@ -39,9 +39,9 @@ build website:
 
 
 test artifacts:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
+  # rules:
+  #   - if: $CI_PIPELINE_SOURCE == "schedule"
+  #     when: never
   image: alpine
   stage: test
   cache: {}
@@ -49,9 +49,9 @@ test artifacts:
     - grep -q "Gatsby" ./public/index.html
 
 test website:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
+  # rules:
+  #   - if: $CI_PIPELINE_SOURCE == "schedule"
+  #     when: never
   stage: test
   cache:
     policy: pull
@@ -64,9 +64,9 @@ test website:
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
 
 deploy website to surge:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
+  # rules:
+  #   - if: $CI_PIPELINE_SOURCE == "schedule"
+  #     when: never
   stage: deploy
   cache:
     policy: pull
@@ -75,9 +75,9 @@ deploy website to surge:
     - surge --project ./public --domain ARR191Professional.surge.sh
 
 test deployed website:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
+  # rules:
+  #   - if: $CI_PIPELINE_SOURCE == "schedule"
+  #     when: never
   stage: deployment test
   image: alpine
   cache: {}
