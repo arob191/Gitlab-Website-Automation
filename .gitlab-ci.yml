@@ -6,7 +6,7 @@ stages:
   - test
   - deploy
   - deployment test
-  - cache
+  # - cache
 
 cache: 
   key: ${CI_COMMIT_REF_SLUG}
