@@ -14,16 +14,19 @@ cache:
     - node_modules/
 
 update cache:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+  when: never
   stage: cache
   cache:
     policy: push
-  only:
-    - schedules
 
 build website:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
   stage: build
-  except:
-    - schedules
   script:
     - echo $CI_COMMIT_SHORT_SHA
     - npm install
@@ -36,18 +39,20 @@ build website:
 
 
 test artifacts:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
   image: alpine
   stage: test
-  except:
-    - schedules
   cache: {}
   script:
     - grep -q "Gatsby" ./public/index.html
 
 test website:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
   stage: test
-  except:
-    - schedules
   cache:
     policy: pull
   script:
@@ -59,9 +64,10 @@ test website:
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
 
 deploy website to surge:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
   stage: deploy
-  except:
-    - schedules
   cache:
     policy: pull
   script:
@@ -69,9 +75,10 @@ deploy website to surge:
     - surge --project ./public --domain ARR191Professional.surge.sh
 
 test deployed website:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
   stage: deployment test
-  except:
-    - schedules
   image: alpine
   cache: {}
   script:
