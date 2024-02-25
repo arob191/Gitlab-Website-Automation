@@ -37,12 +37,11 @@ build website:
   artifacts:
     paths:
       - ./public
+  except:
+    - schedules
 
 
 test artifacts:
-  # rules:
-  #   - if: $CI_PIPELINE_SOURCE == "schedule"
-  #     when: never
   image: alpine
   stage: test
   cache: {}
@@ -50,9 +49,6 @@ test artifacts:
     - grep -q "Gatsby" ./public/index.html
 
 test website:
-  # rules:
-  #   - if: $CI_PIPELINE_SOURCE == "schedule"
-  #     when: never
   stage: test
   cache:
     policy: pull
@@ -63,22 +59,20 @@ test website:
     - gatsby serve &
     - sleep 3
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
+  except:
+    - schedules
 
 deploy website to surge:
-  # rules:
-  #   - if: $CI_PIPELINE_SOURCE == "schedule"
-  #     when: never
   stage: deploy
   cache:
     policy: pull
   script:
     - npm install --global surge
     - surge --project ./public --domain ARR191Professional.surge.sh
+  except:
+    - schedules
 
 test deployed website:
-  # rules:
-  #   - if: $CI_PIPELINE_SOURCE == "schedule"
-  #     when: never
   stage: deployment test
   image: alpine
   cache: {}
@@ -86,3 +80,5 @@ test deployed website:
     - apk add --no-cache curl
     - curl -s "https://arr191professional.surge.sh/" | grep -q "Gatsby"
     - curl -s "https://arr191professional.surge.sh/" | grep -q "$CI_COMMIT_SHORT_SHA"
+  except:
+    - schedules
