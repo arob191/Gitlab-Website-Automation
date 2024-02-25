@@ -27,6 +27,7 @@ build website:
 test artifacts:
   image: alpine
   stage: test
+  cache: {}
   script:
     - grep -q "Gatsby" ./public/index.html
 
@@ -42,6 +43,7 @@ test website:
 
 deploy website to surge:
   stage: deploy
+  cache: {}
   script:
     - npm install --global surge
     - surge --project ./public --domain ARR191Professional.surge.sh
