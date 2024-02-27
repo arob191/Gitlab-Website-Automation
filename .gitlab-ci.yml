@@ -41,13 +41,14 @@ build website:
   except:
     - schedules
 
-
 test artifacts:
   image: alpine
   stage: test
   cache: {}
   script:
     - grep -q "Gatsby" ./public/index.html
+  except:
+    - schedules
 
 test website:
   stage: test
