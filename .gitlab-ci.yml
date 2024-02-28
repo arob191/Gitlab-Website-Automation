@@ -14,6 +14,10 @@ cache:
     - node_modules/
   policy: pull
 
+variables:
+  STAGING_DOMAIN: ARR191Professional-staging.surge.sh
+  PRODUCTION_DOMAIN: ARR191Professional.surge.sh
+
 update cache:
   stage: cache
   script:
@@ -68,12 +72,12 @@ deploy staging:
   stage: deploy staging
   environment: 
     name: staging
-    url: http://ARR191Professional-staging.surge.sh
+    url: http://$STAGING_DOMAIN
   cache:
     policy: pull
   script:
     - npm install --global surge
-    - surge --project ./public --domain ARR191Professional-staging.surge.sh
+    - surge --project ./public --domain $STAGING_DOMAIN
   except:
     - schedules
 
@@ -81,12 +85,12 @@ deploy production:
   stage: deploy production
   environment: 
     name: production
-    url: http://ARR191Professional.surge.sh
+    url: http://$PRODUCTION_DOMAIN
   cache:
     policy: pull
   script:
     - npm install --global surge
-    - surge --project ./public --domain ARR191Professional.surge.sh
+    - surge --project ./public --domain $PRODUCTION_DOMAIN
   except:
     - schedules
 
@@ -96,7 +100,7 @@ test deployed website:
   cache: {}
   script:
     - apk add --no-cache curl
-    - curl -s "https://arr191professional.surge.sh/" | grep -q "Gatsby"
-    - curl -s "https://arr191professional.surge.sh/" | grep -q "$CI_COMMIT_SHORT_SHA"
+    - curl -s "https://$PRODUCTION_DOMAIN" | grep -q "Gatsby"
+    - curl -s "https://$PRODUCTION_DOMAIN" | grep -q "$CI_COMMIT_SHORT_SHA"
   except:
     - schedules
