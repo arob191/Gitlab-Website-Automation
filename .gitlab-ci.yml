@@ -72,7 +72,7 @@ deploy staging:
   stage: deploy staging
   environment: 
     name: staging
-    url: http://$STAGING_DOMAIN
+    url: https://$STAGING_DOMAIN
   cache:
     policy: pull
   script:
@@ -85,7 +85,7 @@ deploy production:
   stage: deploy production
   environment: 
     name: production
-    url: http://$PRODUCTION_DOMAIN
+    url: https://$PRODUCTION_DOMAIN
   cache:
     policy: pull
   script:
