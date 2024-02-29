@@ -73,6 +73,8 @@ deploy staging:
   environment: 
     name: staging
     url: https://$STAGING_DOMAIN
+  only:
+    - master
   cache:
     policy: pull
   script:
@@ -86,6 +88,8 @@ deploy production:
   environment: 
     name: production
     url: https://$PRODUCTION_DOMAIN
+  only:
+    - master
   when: manual
   allow_failure: false
   cache:
@@ -99,6 +103,8 @@ deploy production:
 test deployed website:
   stage: production test
   image: alpine
+  only:
+    - master
   cache: {}
   script:
     - apk add --no-cache curl
