@@ -98,9 +98,6 @@ deploy production:
 
 test deployed website:
   stage: production test
-  environment: 
-    name: production
-    url: https://$PRODUCTION_DOMAIN
   image: alpine
   cache: {}
   script:
