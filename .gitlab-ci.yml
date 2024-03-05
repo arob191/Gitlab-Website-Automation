@@ -1,12 +1,15 @@
 image: node
 
+
 stages:
   - build
   - test
+  - deploy review
   - deploy staging
   - deploy production
   - production test
   - cache
+
 
 cache: 
   key: ${CI_COMMIT_REF_SLUG}
@@ -14,9 +17,11 @@ cache:
     - node_modules/
   policy: pull
 
+
 variables:
   STAGING_DOMAIN: ARR191Professional-staging.surge.sh
   PRODUCTION_DOMAIN: ARR191Professional.surge.sh
+
 
 update cache:
   stage: cache
@@ -30,6 +35,7 @@ update cache:
   only:
     - schedules
 
+
 build website:
   stage: build
   cache: {}
@@ -39,11 +45,14 @@ build website:
     - npm install -g gatsby-cli
     - gatsby build
     - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+    - echo "This job runs in merge request pipelines"
   artifacts:
     paths:
       - ./public
-  except:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH != "schedule"
+
 
 test artifacts:
   image: alpine
@@ -51,8 +60,11 @@ test artifacts:
   cache: {}
   script:
     - grep -q "Gatsby" ./public/index.html
-  except:
-    - schedules
+    - echo "This job runs in merge request pipelines"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH != "schedule"
+
 
 test website:
   stage: test
@@ -65,8 +77,23 @@ test website:
     - gatsby serve &
     - sleep 3
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
-  except:
-    - schedules
+    - echo "This job runs in merge request pipelines"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH != "schedule"
+
+
+deploy review:
+  stage: deploy review
+  only:
+    - merge_requests
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://ARR191Professional-$CI_ENVIRONMENT_SLUG.surge.sh
+  script:
+  - npm install --global surge
+  - surge --project ./public --domain ARR191Professional-$CI_ENVIRONMENT_SLUG.surge.sh
+
 
 deploy staging:
   stage: deploy staging
@@ -82,6 +109,7 @@ deploy staging:
     - surge --project ./public --domain $STAGING_DOMAIN
   except:
     - schedules
+
 
 deploy production:
   stage: deploy production
@@ -99,6 +127,7 @@ deploy production:
     - surge --project ./public --domain $PRODUCTION_DOMAIN
   except:
     - schedules
+
 
 test deployed website:
   stage: production test
