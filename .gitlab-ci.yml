@@ -1,5 +1,6 @@
 image: node
 
+
 stages:
   - build
   - test
@@ -9,15 +10,18 @@ stages:
   - production test
   - cache
 
+
 cache: 
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - node_modules/
   policy: pull
 
+
 variables:
   STAGING_DOMAIN: ARR191Professional-staging.surge.sh
   PRODUCTION_DOMAIN: ARR191Professional.surge.sh
+
 
 update cache:
   stage: cache
@@ -30,6 +34,7 @@ update cache:
     policy: push
   only:
     - schedules
+
 
 build website:
   stage: build
@@ -47,6 +52,7 @@ build website:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH != "schedule"
+
 
 test artifacts:
   image: alpine
@@ -88,6 +94,7 @@ deploy review:
   - npm install --global surge
   - surge --project ./public --domain ARR191Professional-$CI_ENVIRONMENT_SLUG.surge.sh
 
+
 deploy staging:
   stage: deploy staging
   environment: 
@@ -102,6 +109,7 @@ deploy staging:
     - surge --project ./public --domain $STAGING_DOMAIN
   except:
     - schedules
+
 
 deploy production:
   stage: deploy production
@@ -119,6 +127,7 @@ deploy production:
     - surge --project ./public --domain $PRODUCTION_DOMAIN
   except:
     - schedules
+
 
 test deployed website:
   stage: production test
