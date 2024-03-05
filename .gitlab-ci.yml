@@ -44,10 +44,8 @@ build website:
   artifacts:
     paths:
       - ./public
-  except:
-    - schedules
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' or $CI_COMMIT_BRANCH != "schedule"
 
 test artifacts:
   image: alpine
