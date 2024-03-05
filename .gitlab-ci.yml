@@ -40,11 +40,14 @@ build website:
     - npm install -g gatsby-cli
     - gatsby build
     - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+    - echo "This job runs in merge request pipelines"
   artifacts:
     paths:
       - ./public
   except:
     - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 test artifacts:
   image: alpine
@@ -52,8 +55,12 @@ test artifacts:
   cache: {}
   script:
     - grep -q "Gatsby" ./public/index.html
+    - echo "This job runs in merge request pipelines"
   except:
     - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
 
 test website:
   stage: test
@@ -66,8 +73,12 @@ test website:
     - gatsby serve &
     - sleep 3
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
+    - echo "This job runs in merge request pipelines"
   except:
     - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
 
 deploy review:
   stage: deploy review
