@@ -72,7 +72,7 @@ test website:
 deploy review:
   stage: deploy review
   only:
-    - merg_requests
+    - merge_requests
   environment:
     name: review/$CI_COMMIT_REF_NAME
     url: https://ARR191Professional-$CI_ENVIRONMENT_SLUG.surge.sh
