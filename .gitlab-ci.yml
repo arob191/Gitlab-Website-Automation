@@ -55,10 +55,9 @@ test artifacts:
   script:
     - grep -q "Gatsby" ./public/index.html
     - echo "This job runs in merge request pipelines"
-  except:
-    - schedules
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH != "schedule"
 
 
 test website:
@@ -73,10 +72,9 @@ test website:
     - sleep 3
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
     - echo "This job runs in merge request pipelines"
-  except:
-    - schedules
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH != "schedule"
 
 
 deploy review:
