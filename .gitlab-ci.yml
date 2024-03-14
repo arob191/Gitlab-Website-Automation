@@ -94,39 +94,37 @@ deploy review:
   - npm install --global surge
   - surge --project ./public --domain ARR191Professional-$CI_ENVIRONMENT_SLUG.surge.sh
 
-
-deploy staging:
-  stage: deploy staging
-  environment: 
-    name: staging
-    url: https://$STAGING_DOMAIN
+.deploy_template: &deploy
   only:
     - main
-  cache:
-    policy: pull
   script:
     - npm install --global surge
-    - surge --project ./public --domain $STAGING_DOMAIN
+    - surge --project ./public --domain $DOMAIN
+  environment: 
+    url: https://$DOMAIN
+  cache:
+    policy: pull
   except:
     - schedules
+
+deploy staging:
+  <<: *deploy
+  stage: deploy staging
+  variables: 
+    DOMAIN: $STAGING_DOMAIN
+  environment: 
+    name: staging
 
 
 deploy production:
+  <<: *deploy
   stage: deploy production
+  variables: 
+    DOMAIN: $PRODUCTION_DOMAIN
   environment: 
     name: production
-    url: https://$PRODUCTION_DOMAIN
-  only:
-    - main
   when: manual
   allow_failure: false
-  cache:
-    policy: pull
-  script:
-    - npm install --global surge
-    - surge --project ./public --domain $PRODUCTION_DOMAIN
-  except:
-    - schedules
 
 
 test deployed website:
