@@ -101,6 +101,7 @@ deploy review:
     - npm install --global surge
     - surge --project ./public --domain $DOMAIN
   environment: 
+    name: $STAGE
     url: https://$DOMAIN
   cache:
     policy: pull
@@ -112,8 +113,7 @@ deploy staging:
   stage: deploy staging
   variables: 
     DOMAIN: $STAGING_DOMAIN
-  environment: 
-    name: staging
+    STAGE: staging
 
 
 deploy production:
@@ -121,8 +121,7 @@ deploy production:
   stage: deploy production
   variables: 
     DOMAIN: $PRODUCTION_DOMAIN
-  environment: 
-    name: production
+    STAGE: production  
   when: manual
   allow_failure: false
 
