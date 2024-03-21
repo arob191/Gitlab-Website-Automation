@@ -82,7 +82,7 @@ test website:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_COMMIT_BRANCH != "schedule"
 
-
+asfdv
 deploy review:
   stage: deploy review
   only:
@@ -101,7 +101,7 @@ deploy review:
     - npm install --global surge
     - surge --project ./public --domain $DOMAIN
   environment: 
-    name: $STAGES
+    name: $STAGE
     url: https://$DOMAIN
   cache:
     policy: pull
@@ -113,7 +113,7 @@ deploy staging:
   stage: deploy staging
   variables: 
     DOMAIN: $STAGING_DOMAIN
-    STAGES: staging
+    STAGE: staging
 
 
 deploy production:
@@ -121,7 +121,7 @@ deploy production:
   stage: deploy production
   variables: 
     DOMAIN: $PRODUCTION_DOMAIN
-    STAGES: production  
+    STAGE: production  
   when: manual
   allow_failure: false
 
